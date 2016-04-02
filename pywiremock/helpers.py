@@ -24,7 +24,7 @@ class Response:
 
 class Url:
     @classmethod
-    def is_like(cls, url):
+    def matches(cls, url):
         return mappings.UrlPattern(url)
 
 

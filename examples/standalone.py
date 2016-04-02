@@ -22,7 +22,7 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'More content\n')
 
-        expected_request = Request.where(Method.is_get(), Url.is_like('/api/default/get'))
+        expected_request = Request.where(Method.is_get(), Url.matches('/api/default/get'))
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_post_predefined_method(self):
@@ -33,7 +33,7 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'More content\n')
 
-        expected_request = Request.where(Method.is_post(), Url.is_like('/api/default/post')).with_request_body('some content')
+        expected_request = Request.where(Method.is_post(), Url.matches('/api/default/post')).with_request_body('some content')
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_put_predefined_method(self):
@@ -44,7 +44,7 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'More content\n')
 
-        expected_request = Request.where(Method.is_put(), Url.is_like('/api/default/put')).with_request_body('some content')
+        expected_request = Request.where(Method.is_put(), Url.matches('/api/default/put')).with_request_body('some content')
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_delete_predefined_method(self):
@@ -54,12 +54,12 @@ class StandaloneExample(unittest.TestCase):
         # Verify
         self.assertEqual(result.status_code, 204)
 
-        expected_request = Request.where(Method.is_delete(), Url.is_like('/api/default/delete'))
+        expected_request = Request.where(Method.is_delete(), Url.matches('/api/default/delete'))
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_define_method_then_get(self):
         # Setup
-        new_request_definition = Request.where(Method.is_get(), Url.is_like('/api/defined/get'))
+        new_request_definition = Request.where(Method.is_get(), Url.matches('/api/defined/get'))
         new_response_definition = Response.that_is(200, 'defined content')
         stub_mapping = Stub.create_with(new_request_definition, new_response_definition)
         self._sample_server.register(stub_mapping)
@@ -71,12 +71,12 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'defined content')
 
-        expected_request = Request.where(Method.is_get(), Url.is_like('/api/defined/get'))
+        expected_request = Request.where(Method.is_get(), Url.matches('/api/defined/get'))
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_define_method_then_post(self):
         # Setup
-        new_request_definition = Request.where(Method.is_post(), Url.is_like('/api/defined/post')).with_request_body('some content')
+        new_request_definition = Request.where(Method.is_post(), Url.matches('/api/defined/post')).with_request_body('some content')
         new_response_definition = Response.that_is(200, 'defined content')
         stub_mapping = Stub.create_with(new_request_definition, new_response_definition)
         self._sample_server.register(stub_mapping)
@@ -88,5 +88,5 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'defined content')
 
-        expected_request = Request.where(Method.is_post(), Url.is_like('/api/defined/post')).with_request_body('some content')
+        expected_request = Request.where(Method.is_post(), Url.matches('/api/defined/post')).with_request_body('some content')
         self._sample_server.verify(1, expected_request)
