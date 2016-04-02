@@ -18,7 +18,7 @@ class Request:
 
 class Response:
     @classmethod
-    def that_is(cls, status, body):
+    def that_is(cls, status, body=None):
         return mappings.ResponseDefinition(status, body)
 
 

@@ -47,7 +47,10 @@ class ResponseDefinition(Mapping):
         self._body = body
 
     def serialize(self):
-        return {'status': self._status_code, 'body': self._body}
+        as_dict = {'status': self._status_code}
+        if self._body:
+            as_dict['body'] = self._body
+        return as_dict
 
 
 class Scenario(Mapping):
