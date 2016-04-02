@@ -5,9 +5,7 @@ with open('README.md', 'rb') as r_file:
     LDINFO = r_file.read()
 
 required = [
-    "psutil",
-    "argh",
-    "tabulate"
+    "requests"
 ]
 
 dependency_links = [
