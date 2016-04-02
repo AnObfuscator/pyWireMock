@@ -1,0 +1,11 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/api/default/post",
+        "bodyPatterns": [ { "matches": "some content" } ]
+    },
+    "response": {
+        "status": 200,
+        "body": "More content\n"
+    }
+}

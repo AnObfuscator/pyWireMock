@@ -1,0 +1,11 @@
+{
+    "request": {
+        "method": "PUT",
+        "url": "/api/default/put",
+        "bodyPatterns": [ { "matches": "some content" } ]
+    },
+    "response": {
+        "status": 200,
+        "body": "More content\n"
+    }
+}
