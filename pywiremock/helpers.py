@@ -1,69 +1,37 @@
 import mappings
 
 
-class Stub:
-    @classmethod
-    def create_with(cls, request_mapping, response_mapping):
-        return mappings.Stub(request_mapping, response_mapping)
+def stub_for(request_mapping):
+    return mappings.Stub(request_mapping)
 
 
-class Request:
-    @classmethod
-    def where(cls, method, url_match):
-        return RequestPatternBuilder(method, url_match)
-
-    # def for_all():
-    #     return RequestPatternBuilder()
+def a_response():
+    return mappings.ResponseDefinition()
 
 
-class Response:
-    @classmethod
-    def that_is(cls, status, body=None):
-        return mappings.ResponseDefinition(status, body)
+def url_matching(url):
+    return mappings.UrlPattern(url)
 
 
-class Url:
-    @classmethod
-    def matches(cls, url):
-        return mappings.UrlPattern(url)
+def get(url_pattern):
+    return mappings.RequestPattern('GET', url_pattern)
 
 
-class Method:
-    @classmethod
-    def is_post(cls):
-        return 'POST'
-
-    @classmethod
-    def is_get(cls):
-        return 'GET'
-
-    @classmethod
-    def is_put(cls):
-        return 'PUT'
-
-    @classmethod
-    def is_delete(cls):
-        return 'DELETE'
+def post(url_pattern):
+    return mappings.RequestPattern('POST', url_pattern)
 
 
-class RequestPatternBuilder:
-    def __init__(self, method, url_pattern):
-        self.request_pattern = mappings.RequestPattern()
-        self.request_pattern.set_method(method)
-        self.request_pattern.set_url_pattern(url_pattern)
+def put(url_pattern):
+    return mappings.RequestPattern('PUT', url_pattern)
 
-    def with_header(self):
-        return self
 
-    def without_header(self):
-        return self
+def delete(url_pattern):
+    return mappings.RequestPattern('DELETE', url_pattern)
 
-    def with_query_param(self):
-        return self
 
-    def with_request_body(self, body):
-        self.request_pattern.set_body(body)
-        return self
+def matching(body_content):
+    return mappings.RequestBodyPattern(body_content, True)
 
-    def build(self):
-        return self.request_pattern
+
+def not_matching(body_content):
+    return mappings.RequestBodyPattern(body_content, False)

@@ -9,7 +9,7 @@ class WireMock:
         self._url_prefix = url_prefix if url_prefix else ''
 
     def save_mappings(self):
-        pass
+        raise NotImplementedError
 
     def reset_mappings(self):
         """
@@ -26,35 +26,34 @@ class WireMock:
         requests.post(url)
 
     def reset_requests(self):
-        pass
+        raise NotImplementedError
 
     def reset_all_requests(self):
         url = 'http://{}:{}/__admin/requests/reset'.format(self._host, self._port)
         requests.post(url)
 
     def reset_scenarios(self):
-        pass
+        raise NotImplementedError
 
     def register(self, stub_mapping):
         url = 'http://{}:{}/__admin/mappings/new'.format(self._host, self._port)
         requests.post(url, stub_mapping.to_json())
 
     def list_all_stub_mappings(self):
-        pass
+        raise NotImplementedError
 
     def set_global_fixed_delay(self, milliseconds):
-        pass
+        raise NotImplementedError
 
     def add_delay_before_processing_requests(self, milliseconds):
-        pass
+        raise NotImplementedError
 
-    def verify(self, count, request_builder):
+    def verify(self, count, request_pattern):
         url = 'http://{}:{}/__admin/requests/count'.format(self._host, self._port)
-        request_body = request_builder.build().to_json()
+        request_body = request_pattern.to_json()
         response = requests.post(url, request_body)
         # print(response.content)
         response_content = json.loads(response.content)
         response_count = int(response_content['count'])
-        # return count == response_count
         if count != response_count:
             raise AssertionError('Assertion failed. Expected count: {} Actual count: {}'.format(count, response_count))

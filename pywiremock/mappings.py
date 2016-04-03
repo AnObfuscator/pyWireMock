@@ -11,40 +11,69 @@ class Mapping:
 
 
 class Stub(Mapping):
-    def __init__(self, request_pattern, response_definition, priority=None, scenario_name=None, required_scenario_state=None, scenario=None):
+    def __init__(self, request_pattern):
+        assert isinstance(request_pattern, RequestPattern)
         self._request_pattern = request_pattern
+        self._response_definition = None
+
+    def will_return(self, response_definition):
+        assert isinstance(response_definition, ResponseDefinition)
         self._response_definition = response_definition
+        return self
 
     def serialize(self):
-        return {'request': self._request_pattern.build().serialize(), 'response': self._response_definition.serialize()}
+        return {'request': self._request_pattern.serialize(), 'response': self._response_definition.serialize()}
 
 
 class RequestPattern(Mapping):
-    def __init__(self):
-        self._pattern = {}
+    def __init__(self, method, url_pattern):
+        assert isinstance(url_pattern, UrlPattern)
+        self._pattern = {'method': method, 'url': url_pattern.serialize()}
 
-    def set_method(self, method):
-        self._pattern['method'] = method
+    def with_header(self):
+        raise NotImplementedError
 
-    def set_url_pattern(self, url_pattern):
-        self._pattern['url'] = url_pattern.to_json()
+    def without_header(self):
+        raise NotImplementedError
 
-    def set_body(self, body, matches=True):
-        this_pattern = {}
-        pattern_type = 'matches' if matches else 'doesNotMatch'
-        this_pattern[pattern_type] = body
+    def with_query_param(self):
+        raise NotImplementedError
+
+    def with_request_body(self, request_body_pattern):
+        assert isinstance(request_body_pattern, RequestBodyPattern)
         body_patterns = self._pattern.get('bodyPatterns', [])
-        body_patterns.append(this_pattern)
+        body_patterns.append(request_body_pattern.serialize())
         self._pattern['bodyPatterns'] = body_patterns
+        return self
+
+    def serialize(self):
+        return self._pattern
+
+
+class RequestBodyPattern(Mapping):
+    def __init__(self, body_content, matches):
+        pattern_type = 'matches' if matches else 'doesNotMatch'
+        self._pattern = {pattern_type: body_content}
 
     def serialize(self):
         return self._pattern
 
 
 class ResponseDefinition(Mapping):
-    def __init__(self, status_code, body):
+    def __init__(self, status_code=None, body=None):
         self._status_code = status_code
         self._body = body
+
+    def with_status(self, status_code):
+        self._status_code = status_code
+        return self
+
+    def with_body(self, body):
+        self._body = body
+        return self
+
+    def with_body_file(self, body_file_path):
+        raise NotImplementedError
 
     def serialize(self):
         as_dict = {'status': self._status_code}
@@ -62,5 +91,5 @@ class UrlPattern(Mapping):
     def __init__(self, url):
         self._url = url
 
-    def to_json(self):
+    def serialize(self):
         return self._url

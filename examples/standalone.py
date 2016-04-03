@@ -1,6 +1,6 @@
 import unittest
 from pywiremock.client import WireMock
-from pywiremock.helpers import Method, Request, Response, Stub, Url
+from pywiremock.helpers import *
 import requests
 
 # Note: this assumes that there is a WireMock instance running locally on 7890, with the mappings defined in 'sample'
@@ -22,7 +22,7 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'More content\n')
 
-        expected_request = Request.where(Method.is_get(), Url.matches('/api/default/get'))
+        expected_request = get(url_matching('/api/default/get'))
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_post_predefined_method(self):
@@ -33,7 +33,7 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'More content\n')
 
-        expected_request = Request.where(Method.is_post(), Url.matches('/api/default/post')).with_request_body('some content')
+        expected_request = post(url_matching('/api/default/post')).with_request_body(matching('some content'))
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_put_predefined_method(self):
@@ -44,7 +44,7 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'More content\n')
 
-        expected_request = Request.where(Method.is_put(), Url.matches('/api/default/put')).with_request_body('some content')
+        expected_request = put(url_matching('/api/default/put')).with_request_body(matching('some content'))
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_delete_predefined_method(self):
@@ -54,15 +54,15 @@ class StandaloneExample(unittest.TestCase):
         # Verify
         self.assertEqual(result.status_code, 204)
 
-        expected_request = Request.where(Method.is_delete(), Url.matches('/api/default/delete'))
+        expected_request = delete(url_matching('/api/default/delete'))
         self._sample_server.verify(1, expected_request)
 
     def test_attach_to_standalone_and_define_method_then_get(self):
         # Setup
-        new_request_definition = Request.where(Method.is_get(), Url.matches('/api/defined/get'))
-        new_response_definition = Response.that_is(200, 'defined content')
-        stub_mapping = Stub.create_with(new_request_definition, new_response_definition)
-        self._sample_server.register(stub_mapping)
+        new_request = get(url_matching('/api/defined/get'))
+        new_response = a_response().with_status(200).with_body('defined content')
+        new_stub = stub_for(new_request).will_return(new_response)
+        self._sample_server.register(new_stub)
 
         # Act
         result = requests.get('http://localhost:7890/api/defined/get')
@@ -71,15 +71,14 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'defined content')
 
-        expected_request = Request.where(Method.is_get(), Url.matches('/api/defined/get'))
-        self._sample_server.verify(1, expected_request)
+        self._sample_server.verify(1, new_request)
 
     def test_attach_to_standalone_and_define_method_then_post(self):
         # Setup
-        new_request_definition = Request.where(Method.is_post(), Url.matches('/api/defined/post')).with_request_body('some content')
-        new_response_definition = Response.that_is(200, 'defined content')
-        stub_mapping = Stub.create_with(new_request_definition, new_response_definition)
-        self._sample_server.register(stub_mapping)
+        new_request = post(url_matching('/api/defined/post')).with_request_body(matching('some content'))
+        new_response = a_response().with_status(200).with_body('defined content')
+        new_stub = stub_for(new_request).will_return(new_response)
+        self._sample_server.register(new_stub)
 
         # Act
         result = requests.post('http://localhost:7890/api/defined/post', 'some content')
@@ -88,15 +87,14 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'defined content')
 
-        expected_request = Request.where(Method.is_post(), Url.matches('/api/defined/post')).with_request_body('some content')
-        self._sample_server.verify(1, expected_request)
+        self._sample_server.verify(1, new_request)
 
     def test_attach_to_standalone_and_define_method_then_put(self):
         # Setup
-        new_request_definition = Request.where(Method.is_put(), Url.matches('/api/defined/put')).with_request_body('some content')
-        new_response_definition = Response.that_is(200, 'defined content')
-        stub_mapping = Stub.create_with(new_request_definition, new_response_definition)
-        self._sample_server.register(stub_mapping)
+        new_request = put(url_matching('/api/defined/put')).with_request_body(matching('some content'))
+        new_response = a_response().with_status(200).with_body('defined content')
+        new_stub = stub_for(new_request).will_return(new_response)
+        self._sample_server.register(new_stub)
 
         # Act
         result = requests.put('http://localhost:7890/api/defined/put', 'some content')
@@ -105,15 +103,14 @@ class StandaloneExample(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.content, 'defined content')
 
-        expected_request = Request.where(Method.is_put(), Url.matches('/api/defined/put'))
-        self._sample_server.verify(1, expected_request)
+        self._sample_server.verify(1, new_request)
 
     def test_attach_to_standalone_and_define_method_then_delete(self):
         # Setup
-        new_request_definition = Request.where(Method.is_delete(), Url.matches('/api/defined/delete'))
-        new_response_definition = Response.that_is(204)
-        stub_mapping = Stub.create_with(new_request_definition, new_response_definition)
-        self._sample_server.register(stub_mapping)
+        new_request = delete(url_matching('/api/defined/delete'))
+        new_response = a_response().with_status(204)
+        new_stub = stub_for(new_request).will_return(new_response)
+        self._sample_server.register(new_stub)
 
         # Act
         result = requests.delete('http://localhost:7890/api/defined/delete')
@@ -121,5 +118,4 @@ class StandaloneExample(unittest.TestCase):
         # Verify
         self.assertEqual(result.status_code, 204)
 
-        expected_request = Request.where(Method.is_put(), Url.matches('/api/defined/delete'))
-        self._sample_server.verify(1, expected_request)
+        self._sample_server.verify(1, new_request)
