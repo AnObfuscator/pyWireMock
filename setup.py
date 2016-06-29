@@ -8,19 +8,15 @@ required = [
     "requests"
 ]
 
-dependency_links = [
-]
-
 setuptools.setup(
-    name="pyWireMock",
-    version="0.0.1.dev1",
+    name="pywiremock",
+    version="1.5.7.dev1",
     author="AnObfuscator",
     author_email="anobfuscator@gmail.com",
     description="An implementation of the WireMock REST API in Python.",
     long_description=LDINFO,
     packages=setuptools.find_packages(),
-    url="",
-    dependency_links=dependency_links,
+    url="https://github.com/AnObfuscator/pyWireMock",
     install_requires=required,
     classifiers=[
         'Intended Audience :: Information Technology',
@@ -28,6 +24,5 @@ setuptools.setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
         'Topic :: Utilities',
-        'Topic :: Software Development :: Libraries :: Python Modules'],
-    entry_points={ }
+        'Topic :: Software Development :: Libraries :: Python Modules']
 )

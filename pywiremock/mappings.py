@@ -24,6 +24,25 @@ class Stub(Mapping):
     def serialize(self):
         return {'request': self._request_pattern.serialize(), 'response': self._response_definition.serialize()}
 
+    @classmethod
+    def deserialize(cls, mapping, response_body=None):
+        request_method = mapping['request']['method']
+        request_url = mapping['request']['url']
+        request_body_patterns = mapping['request']['bodyPatterns']
+        request = RequestPattern(request_method, UrlPattern(request_url))
+        for body_pattern in request_body_patterns:
+            new_pattern = RequestBodyPattern(None, None)
+            new_pattern._pattern = body_pattern
+            request.with_request_body(new_pattern)
+
+        response_status = mapping['response']['status']
+        stringified_response_body = response_body #json.dumps(response_body) if response_body else None
+        response = ResponseDefinition(response_status, stringified_response_body)
+
+        stub = Stub(request).will_return(response)
+
+        return stub
+
 
 class RequestPattern(Mapping):
     def __init__(self, method, url_pattern):

@@ -37,7 +37,9 @@ class WireMock:
 
     def register(self, stub_mapping):
         url = 'http://{}:{}/__admin/mappings/new'.format(self._host, self._port)
-        requests.post(url, stub_mapping.to_json())
+        result = requests.post(url, stub_mapping.to_json())
+        # print(stub_mapping.to_json())
+        # print(result)
 
     def list_all_stub_mappings(self):
         raise NotImplementedError
