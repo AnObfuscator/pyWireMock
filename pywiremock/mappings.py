@@ -28,7 +28,7 @@ class Stub(Mapping):
     def deserialize(cls, mapping, response_body=None):
         request_method = mapping['request']['method']
         request_url = mapping['request']['url']
-        request_body_patterns = mapping['request']['bodyPatterns']
+        request_body_patterns = mapping['request'].get('bodyPatterns', [])
         request = RequestPattern(request_method, UrlPattern(request_url))
         for body_pattern in request_body_patterns:
             new_pattern = RequestBodyPattern(None, None)
