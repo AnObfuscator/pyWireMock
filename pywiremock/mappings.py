@@ -36,8 +36,9 @@ class Stub(Mapping):
             request.with_request_body(new_pattern)
 
         response_status = mapping['response']['status']
-        stringified_response_body = response_body #json.dumps(response_body) if response_body else None
-        response = ResponseDefinition(response_status, stringified_response_body)
+        response_headers = mapping['response'].get('headers', {})
+        stringified_response_body = response_body
+        response = ResponseDefinition(response_status, stringified_response_body, response_headers)
 
         stub = Stub(request).will_return(response)
 
@@ -79,9 +80,10 @@ class RequestBodyPattern(Mapping):
 
 
 class ResponseDefinition(Mapping):
-    def __init__(self, status_code=None, body=None):
+    def __init__(self, status_code=None, body=None, headers=None):
         self._status_code = status_code
         self._body = body
+        self._headers = headers if headers else {}
 
     def with_status(self, status_code):
         self._status_code = status_code
@@ -91,13 +93,18 @@ class ResponseDefinition(Mapping):
         self._body = body
         return self
 
+    def with_header(self, key, value):
+        self._headers[key] = value
+
     def with_body_file(self, body_file_path):
         raise NotImplementedError
 
     def serialize(self):
         as_dict = {'status': self._status_code}
+        as_dict['headers'] = self._headers
         if self._body:
             as_dict['body'] = self._body
+
         return as_dict
 
 
