@@ -73,6 +73,7 @@ class RequestPattern(Mapping):
         return self
 
     def serialize(self):
+        self._pattern['headers'] = self._headers
         return self._pattern
 
 
