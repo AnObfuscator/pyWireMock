@@ -29,7 +29,9 @@ class Stub(Mapping):
         request_method = mapping['request']['method']
         request_url = mapping['request']['url']
         request_body_patterns = mapping['request'].get('bodyPatterns', [])
+        request_headers = mapping['request'].get('headers', {})
         request = RequestPattern(request_method, UrlPattern(request_url))
+        request.set_headers(request_headers)
         for body_pattern in request_body_patterns:
             new_pattern = RequestBodyPattern(None, None)
             new_pattern._pattern = body_pattern
@@ -49,12 +51,16 @@ class RequestPattern(Mapping):
     def __init__(self, method, url_pattern):
         assert isinstance(url_pattern, UrlPattern)
         self._pattern = {'method': method, 'url': url_pattern.serialize()}
+        self._headers = {}
 
-    def with_header(self):
-        raise NotImplementedError
+    def set_headers(self, headers):
+        self._headers = headers
 
-    def without_header(self):
-        raise NotImplementedError
+    def with_header(self, name, value):
+        self._headers[name] = {'equalTo': value}
+
+    def without_header(self, name):
+        self._headers[name] = {'absent': True}
 
     def with_query_param(self):
         raise NotImplementedError
