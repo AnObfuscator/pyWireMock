@@ -29,6 +29,22 @@ def delete(url_pattern):
     return mappings.RequestPattern('DELETE', url_pattern)
 
 
+def head(url_pattern):
+    return mappings.RequestPattern('HEAD', url_pattern)
+
+
+def trace(url_pattern):
+    return mappings.RequestPattern('TRACE', url_pattern)
+
+
+def options(url_pattern):
+    return mappings.RequestPattern('OPTIONS', url_pattern)
+
+
+def any(url_pattern):
+    return mappings.RequestPattern('ANY', url_pattern)
+
+
 def matching(body_content):
     return mappings.RequestBodyPattern(body_content, True)
 
