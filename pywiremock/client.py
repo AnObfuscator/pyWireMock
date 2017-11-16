@@ -10,11 +10,17 @@ class WireMock:
         self._base_url = 'http://{}:{}/__admin'.format(self._host, self._port)
 
     def list_all_stub_mappings(self, limit=None, offset=None):
+        """
+        Get all stub mappings
+        """
         url = '{}/mappings'.format(self._base_url)
         response = requests.get(url) # TODO support limit & offset
         return response.json()
 
     def add_stub_mapping(self, stub_mapping):
+        """
+        Create a new stub mapping
+        """
         url = '{}/mappings'.format(self._base_url)
         response = requests.post(url, stub_mapping.to_json())
         return response.json()
@@ -34,19 +40,31 @@ class WireMock:
         requests.post(url)
 
     def get_stub_mapping(self, mapping_id):
+        """
+        Get a single stub mapping
+        """
         url = '{}/mappings/{}'.format(self._base_url, mapping_id)
         response = requests.get(url)
         return response.json()
 
     def edit_stub_mapping(self, mapping_id, stub_mapping):
+        """
+        Update an existing stub mapping
+        """
         url = '{}/mappings/{}'.format(self._base_url, mapping_id)
         response = requests.put(url, stub_mapping.to_json())
 
     def remove_stub_mapping(self, mapping_id):
+        """
+        Delete a stub mapping
+        """
         url = '{}/mappings/{}'.format(self._base_url, mapping_id)
         requests.delete(url)
 
     def save_mappings(self):
+        """
+        Save all persistent stub mappings to the backing store
+        """
         url = '{}/mappings/save'.format(self._base_url)
         requests.post(url)
 
@@ -181,6 +199,13 @@ class WireMock:
         url = '{}/settings'.format(self._base_url)
         requests.post(url, global_settings.to_json())
 
+    def shutdown(self):
+        """
+        Shutdown function
+        """
+        url = '{}/shutdown'.format(self._base_url)
+        requests.post(url)
+
     def register(self, stub_mapping):
         url = 'http://{}:{}/__admin/mappings/new'.format(self._host, self._port)
         result = requests.post(url, stub_mapping.to_json())
@@ -202,7 +227,3 @@ class WireMock:
         response_count = int(response_content['count'])
         if count != response_count:
             raise AssertionError('Assertion failed. Expected count: {} Actual count: {}'.format(count, response_count))
-
-    def shutdown(self):
-        url = '{}/shutdown'.format(self._base_url)
-        requests.post(url)
