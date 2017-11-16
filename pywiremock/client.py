@@ -143,8 +143,20 @@ class WireMock:
         response = requests.post(url, record_spec.to_json())
         return response.json()
 
+    def get_scenarios(self):
+        """
+        Get all scenarios
+        """
+        url = '{}/scenarios'.format(self._base_url)
+        response = requests.get(url)
+        return response.json()
+
     def reset_scenarios(self):
-        raise NotImplementedError
+        """
+        Reset the state of all scenarios
+        """
+        url = '{}/scenarios/reset'.format(self._base_url)
+        requests.post(url)
 
     def register(self, stub_mapping):
         url = 'http://{}:{}/__admin/mappings/new'.format(self._host, self._port)
