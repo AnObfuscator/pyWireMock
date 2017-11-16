@@ -158,6 +158,22 @@ class WireMock:
         url = '{}/scenarios/reset'.format(self._base_url)
         requests.post(url)
 
+    def find_top_near_misses_for(self, logged_request=None, request_pattern=None):
+        """
+        Find at most 3 near misses for closest stub mappings to the specified request or request pattern
+        """
+        response = None
+        if logged_request:
+            url = '{}/near-misses/request'.format(self._base_url)
+            response = requests.post(url, logged_request.to_json())
+
+        elif request_pattern:
+            url = '{}/near-misses/request-pattern'.format(self._base_url)
+            response = requests.post(url, request_pattern.to_json())
+        else:
+            raise NotImplementedError
+        return response.json()
+
     def register(self, stub_mapping):
         url = 'http://{}:{}/__admin/mappings/new'.format(self._host, self._port)
         result = requests.post(url, stub_mapping.to_json())
