@@ -50,12 +50,67 @@ class WireMock:
         url = '{}/mappings/save'.format(self._base_url)
         requests.post(url)
 
+    def get_all_requests(self, limit=None, since_date=None):
+        """
+        Get received requests
+        """
+        url = '{}/requests'.format(self._base_url)
+        response = requests.get(url)  # TODO support query params
+        return response.json()
+
     def reset_requests(self):
-        raise NotImplementedError
+        """
+        Delete all received requests
+        """
+        url = '{}/requests'.format(self._base_url)
+        requests.delete(url)
+
+    def get_request(self, request_id):
+        """
+        Single logged request
+        """
+        url = '{}/requests/{}'.format(self._base_url, request_id)
+        response = requests.get(url)
+        return response.json()
 
     def reset_all_requests(self):
-        url = 'http://{}:{}/__admin/requests/reset'.format(self._host, self._port)
+        """
+        Empty the request journal
+        """
+        url = '{}/requests/reset'.format(self._base_url)
         requests.post(url)
+
+    def count_requests_matching(self, request_pattern):
+        """
+        Count requests logged in the journal matching the specified criteria
+        """
+        url = '{}/requests/count'.format(self._base_url)
+        response = requests.post(url, request_pattern.to_json())
+        return response.json()
+
+    def find_requests_matching(self, request_pattern):
+        """
+        Retrieve details of requests logged in the journal matching the specified criteria
+        """
+        url = '{}/requests/find'.format(self._base_url)
+        response = requests.post(url, request_pattern.to_json())
+        return response.json()
+
+    def find_unmatched_requests(self):
+        """
+        Get details of logged requests that weren't matched by any stub mapping
+        """
+        url = '{}/requests/unmatched'.format(self._base_url)
+        response = requests.get(url)
+        return response.json()
+
+    def find_near_misses_for_unmatched_results(self):
+        """
+        Retrieve near-misses for all unmatched requests
+        """
+        url = '{}/requests/unmatched/near-misses'.format(self._base_url)
+        response = requests.get(url)
+        return response.json()
 
     def reset_scenarios(self):
         raise NotImplementedError
