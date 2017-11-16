@@ -112,6 +112,37 @@ class WireMock:
         response = requests.get(url)
         return response.json()
 
+    def start_recording(self, record_spec):
+        """
+        Start recording stub mappings
+        """
+        url = '{}/recordings/start'.format(self._base_url)
+        requests.post(url, record_spec.to_json())
+
+    def stop_recording(self):
+        """
+        Stop recording stub mappings
+        """
+        url = '{}/recordings/stop'.format(self._base_url)
+        response = requests.post(url)
+        return response.json()
+
+    def get_recording_status(self):
+        """
+        Get the recording status (started or stopped)
+        """
+        url = '{}/recordings/status'.format(self._base_url)
+        response = requests.get(url)
+        return response.json()
+
+    def snapshot_record(self, record_spec):
+        """
+        Take a snapshot recording
+        """
+        url = '{}/recordings/snapshot'.format(self._base_url)
+        response = requests.post(url, record_spec.to_json())
+        return response.json()
+
     def reset_scenarios(self):
         raise NotImplementedError
 
