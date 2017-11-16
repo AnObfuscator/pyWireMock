@@ -174,6 +174,13 @@ class WireMock:
             raise NotImplementedError
         return response.json()
 
+    def update_global_settings(self, global_settings):
+        """
+        Update global settings
+        """
+        url = '{}/settings'.format(self._base_url)
+        requests.post(url, global_settings.to_json())
+
     def register(self, stub_mapping):
         url = 'http://{}:{}/__admin/mappings/new'.format(self._host, self._port)
         result = requests.post(url, stub_mapping.to_json())
