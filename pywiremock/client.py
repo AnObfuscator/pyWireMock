@@ -14,7 +14,7 @@ class WireMock:
         Get all stub mappings
         """
         url = '{}/mappings'.format(self._base_url)
-        response = requests.get(url) # TODO support limit & offset
+        response = requests.get(url)  # TODO support limit & offset
         return response.json()
 
     def add_stub_mapping(self, stub_mapping):
@@ -53,6 +53,7 @@ class WireMock:
         """
         url = '{}/mappings/{}'.format(self._base_url, mapping_id)
         response = requests.put(url, stub_mapping.to_json())
+        return response.json()
 
     def remove_stub_mapping(self, mapping_id):
         """
