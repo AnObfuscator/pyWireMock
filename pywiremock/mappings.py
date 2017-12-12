@@ -15,14 +15,36 @@ class Stub(Mapping):
         assert isinstance(request_pattern, RequestPattern)
         self._request_pattern = request_pattern
         self._response_definition = None
+        self._scenario_name = None
+        self._required_scenario_state = None
+        self._new_scenario_state = None
 
     def will_return(self, response_definition):
         assert isinstance(response_definition, ResponseDefinition)
         self._response_definition = response_definition
         return self
 
+    def in_scenario(self, scenario_name):
+        self._scenario_name = scenario_name
+        return self
+
+    def when_scenario_state_is(self, scenario_state):
+        self._required_scenario_state = scenario_state
+        return self
+
+    def will_set_state_to(self, scenario_state):
+        self._new_scenario_state = scenario_state
+        return self
+
     def serialize(self):
-        return {'request': self._request_pattern.serialize(), 'response': self._response_definition.serialize()}
+        as_dict = {'request': self._request_pattern.serialize(), 'response': self._response_definition.serialize()}
+        if self._scenario_name:
+            as_dict['scenarioName'] = self._scenario_name
+        if self._required_scenario_state:
+            as_dict['requiredScenarioState'] = self._required_scenario_state
+        if self._new_scenario_state:
+            as_dict['newScenarioState'] = self._new_scenario_state
+        return as_dict
 
     @classmethod
     def deserialize(cls, mapping, response_body=None):
@@ -126,3 +148,32 @@ class UrlPattern(Mapping):
 
     def serialize(self):
         return self._url
+
+
+class RecordSpec(Mapping):
+    def __init__(self, url=None):
+        self._url = url
+
+    def serialize(self):
+        as_dict = {"targetBaseUrl": self._url}
+        return as_dict
+
+    def for_target(self, url):
+        self._url = url
+        return self
+
+    # TODO
+    # startRecording(
+    #     recordSpec()
+    #         .forTarget("http://example.mocklab.io")
+    #         .onlyRequestsMatching(getRequestedFor(urlPathMatching("/api/.*")))
+    #         .captureHeader("Accept")
+    #         .captureHeader("Content-Type", true)
+    #         .extractBinaryBodiesOver(10240)
+    #         .extractTextBodiesOver(2048)
+    #         .makeStubsPersistent(false)
+    #         .ignoreRepeatRequests()
+    #         .transformers("modify-response-header")
+    #         .transformerParameters(Parameters.one("headerValue", "123"))
+    #         .matchRequestBodyWithEqualToJson(false, true)
+    # );
