@@ -51,3 +51,9 @@ def matching(body_content):
 
 def not_matching(body_content):
     return mappings.RequestBodyPattern(body_content, False)
+
+
+def record_spec():
+    return mappings.RecordSpec()
+
+STARTED = 'Started'
