@@ -198,7 +198,8 @@ class WireMock:
         Update global settings
         """
         url = '{}/settings'.format(self._base_url)
-        requests.post(url, global_settings.to_json())
+        response = requests.post(url, global_settings.to_json())
+        return response.json()
 
     def shutdown(self):
         """

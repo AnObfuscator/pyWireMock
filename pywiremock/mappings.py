@@ -66,6 +66,13 @@ class Stub(Mapping):
 
         stub = Stub(request).will_return(response)
 
+        if 'scenarioName' in mapping:
+            stub.in_scenario(mapping['scenarioName'])
+        if 'requiredScenarioState' in mapping:
+            stub.when_scenario_state_is(mapping['requiredScenarioState'])
+        if 'newScenarioState' in mapping:
+            stub.will_set_state_to(mapping['newScenarioState'])
+
         return stub
 
 
