@@ -87,9 +87,11 @@ class RequestPattern(Mapping):
 
     def with_header(self, name, value):
         self._headers[name] = {'equalTo': value}
+        return self
 
     def without_header(self, name):
         self._headers[name] = {'absent': True}
+        return self
 
     def with_query_param(self):
         raise NotImplementedError
