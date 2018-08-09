@@ -109,9 +109,8 @@ class RequestPattern(Mapping):
 
 
 class RequestBodyPattern(Mapping):
-    def __init__(self, body_content, matches):
-        pattern_type = 'matches' if matches else 'doesNotMatch'
-        self._pattern = {pattern_type: body_content}
+    def __init__(self, body_content, match_type):
+        self._pattern = {match_type: body_content}
 
     def serialize(self):
         return self._pattern

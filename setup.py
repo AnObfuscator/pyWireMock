@@ -10,7 +10,7 @@ required = [
 
 setuptools.setup(
     name="pywiremock",
-    version="2.11.0-2",
+    version="2.11.0-3",
     author="AnObfuscator",
     author_email="anobfuscator@gmail.com",
     description="An implementation of the WireMock REST API in Python.",

@@ -46,14 +46,35 @@ def any(url_pattern):
 
 
 def matching(body_content):
-    return mappings.RequestBodyPattern(body_content, True)
+    return mappings.RequestBodyPattern(body_content, RequestBodyMatchType.MATCHES)
 
 
 def not_matching(body_content):
-    return mappings.RequestBodyPattern(body_content, False)
+    return mappings.RequestBodyPattern(body_content, RequestBodyMatchType.DOES_NOT_MATCH)
+
+
+def equal_to_xml(body_content):
+    return mappings.RequestBodyPattern(body_content, RequestBodyMatchType.EQUAL_TO_XML)
+
+
+def matches_xpath(body_content):
+    return mappings.RequestBodyPattern(body_content, RequestBodyMatchType.MATCHES_XPATH)
+
+
+def equal_to_json(body_content):
+    return mappings.RequestBodyPattern(body_content, RequestBodyMatchType.EQUAL_TO_JSON)
 
 
 def record_spec():
     return mappings.RecordSpec()
 
+
 STARTED = 'Started'
+
+
+class RequestBodyMatchType:
+    MATCHES = 'matches'
+    DOES_NOT_MATCH = 'doesNotMatch'
+    EQUAL_TO_XML = 'equalToXml'
+    MATCHES_XPATH = 'matchesXPath'
+    EQUAL_TO_JSON = 'equalToJson'
