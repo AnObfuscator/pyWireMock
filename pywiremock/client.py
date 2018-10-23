@@ -213,6 +213,7 @@ class WireMock:
         result = requests.post(url, stub_mapping.to_json())
         # print(stub_mapping.to_json())
         # print(result)
+        return result
 
     def set_global_fixed_delay(self, milliseconds):
         raise NotImplementedError
