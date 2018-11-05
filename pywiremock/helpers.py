@@ -65,6 +65,10 @@ def equal_to_json(body_content):
     return mappings.RequestBodyPattern(body_content, RequestBodyMatchType.EQUAL_TO_JSON)
 
 
+def containing(body_content):
+    return mappings.RequestBodyPattern(body_content, RequestBodyMatchType.CONTAINS)
+
+
 def record_spec():
     return mappings.RecordSpec()
 
@@ -78,3 +82,4 @@ class RequestBodyMatchType:
     EQUAL_TO_XML = 'equalToXml'
     MATCHES_XPATH = 'matchesXPath'
     EQUAL_TO_JSON = 'equalToJson'
+    CONTAINS = 'contains'
