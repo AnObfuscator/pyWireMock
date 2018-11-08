@@ -233,6 +233,16 @@ class ClientTest(unittest.TestCase):
     def test_shutdown(self):
         pass
 
+    def test_containing_helper(self):
+        _url = '/api/testhelper/containing'
+        new_request = post(url_matching(_url)).with_request_body(containing('text value'))
+        new_response = a_response().with_status(200).with_body('success')
+        new_stub = stub_for(new_request).will_return(new_response)
+        self._sample_server.add_stub_mapping(new_stub)
+
+        _request = requests.post('http://localhost:7890{}'.format(_url), data="test text value here")
+        self.assertEqual(_request.text, 'success')
+
     def _create_stubs(self):
         new_stubs = {}
 
