@@ -3,6 +3,7 @@ from pywiremock.client import WireMock
 from pywiremock.helpers import *
 import requests
 
+default_mapping_count = 5
 
 # Note: this assumes that there is a WireMock instance running locally on 7890, with the mappings defined in 'sample'
 class ClientTest(unittest.TestCase):
@@ -16,7 +17,7 @@ class ClientTest(unittest.TestCase):
     def test_list_all_stub_mappings(self):
         mappings = self._sample_server.list_all_stub_mappings()
 
-        self.assertEqual(5, mappings['meta']['total'])
+        self.assertEqual(default_mapping_count, mappings['meta']['total'])
         self.assertIsNotNone(mappings['mappings'])
 
     def test_add_stub_mapping(self):
@@ -26,7 +27,7 @@ class ClientTest(unittest.TestCase):
             created_stubs[k] = self._sample_server.add_stub_mapping(v)
 
         all_stubs = self._sample_server.list_all_stub_mappings()
-        self.assertEqual(5+len(new_stubs), all_stubs['meta']['total'])
+        self.assertEqual(default_mapping_count+len(new_stubs), all_stubs['meta']['total'])
 
     def test_reset_mappings(self):
         pass
@@ -44,7 +45,7 @@ class ClientTest(unittest.TestCase):
         self._sample_server.reset_to_default_mappings()
 
         mappings = self._sample_server.list_all_stub_mappings()
-        self.assertEqual(5, mappings['meta']['total'])
+        self.assertEqual(default_mapping_count, mappings['meta']['total'])
 
     def test_get_stub_mapping(self):
         new_request = get(url_matching('/api/defined/test'))
@@ -175,7 +176,7 @@ class ClientTest(unittest.TestCase):
 
     def test_start_recording_stop_recording_get_recording_status(self):
         recording_status = self._sample_server.get_recording_status()
-        self.assertEqual('Stopped', recording_status['status'])
+        self.assertEqual('NeverStarted', recording_status['status'])
 
         recording = record_spec().for_target('http://example.mocklab.io')
         self._sample_server.start_recording(recording)

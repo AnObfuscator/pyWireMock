@@ -69,7 +69,7 @@ class StandaloneExample(unittest.TestCase):
 
         # Verify
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.content, 'defined content')
+        self.assertEqual(result.text, 'defined content')
 
         self._sample_server.verify(1, new_request)
 
@@ -85,7 +85,7 @@ class StandaloneExample(unittest.TestCase):
 
         # Verify
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.content, 'defined content')
+        self.assertEqual(result.text, 'defined content')
 
         self._sample_server.verify(1, new_request)
 
@@ -101,7 +101,7 @@ class StandaloneExample(unittest.TestCase):
 
         # Verify
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(result.content, 'defined content')
+        self.assertEqual(result.text, 'defined content')
 
         self._sample_server.verify(1, new_request)
 
