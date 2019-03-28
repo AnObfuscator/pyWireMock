@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import setuptools
 
-with open('README.md', 'rb') as r_file:
+with open('README.md', 'r') as r_file:
     LDINFO = r_file.read()
 
 required = [
@@ -10,7 +10,7 @@ required = [
 
 setuptools.setup(
     name="pywiremock",
-    version="2.11.0-5",
+    version="2.11.0-6",
     author="AnObfuscator",
     author_email="anobfuscator@gmail.com",
     description="An implementation of the WireMock REST API in Python.",
@@ -23,6 +23,8 @@ setuptools.setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Utilities',
-        'Topic :: Software Development :: Libraries :: Python Modules']
+        'Topic :: Software Development :: Libraries :: Python Modules'
+    ]
 )

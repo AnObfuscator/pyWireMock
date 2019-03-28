@@ -1,4 +1,4 @@
-import mappings
+import pywiremock.mappings as mappings
 
 
 def stub_for(request_mapping):
